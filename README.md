@@ -16,7 +16,9 @@ You need to have:
 
 3.  The database running &rarr; Follow the next section to run the database in a container. 
 
-4. To start the development server do:
+4. To customize the report destination dir &rarr; Use a valid dir where you have permissions in the  `reportsSaveDir` variable of the `Aggregator` class.
+
+5. To start the development server do:
 
    ```bash
    mvn quarkus:dev

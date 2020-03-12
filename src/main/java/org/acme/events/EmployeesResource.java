@@ -21,6 +21,7 @@ public class EmployeesResource {
     public Response getAllEmployees() {
         Aggregator aggregator = new Aggregator();
         List<EmployeeDto> employees = aggregator.getAllEmployees();
+        //TODO: fix this check makes no sense.
         if (employees != null)
             return Response.ok(employees).build();            
         return Response.noContent().build();

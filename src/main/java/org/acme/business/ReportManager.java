@@ -1,6 +1,9 @@
 package org.acme.business;
 
+import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.acme.entities.Employee;
@@ -40,6 +43,7 @@ public class ReportManager {
             JasperReport jasperReport = JasperCompileManager.compileReport(employeeReportStream);
             this.report = jasperReport;
         // Save the compiled report.
+        // TODO: Maybe it can be saved with the other reports? Like in the export methods.
         JRSaver.saveObject(jasperReport, "saved-report.jasper");
 		} catch (JRException ex) {
 			ex.printStackTrace();
@@ -59,12 +63,13 @@ public class ReportManager {
 
         return jasperPrint;
     }
-    public void exportToPDF(JasperPrint print) {
+    public void exportToPDF(JasperPrint print, String destinationDir) {
         JRPdfExporter exporter = new JRPdfExporter();
  
         exporter.setExporterInput(new SimpleExporterInput(print));
+        String destinationPath = buildDestinationPath(destinationDir, ".pdf");
         exporter.setExporterOutput(
-        new SimpleOutputStreamExporterOutput("employeeReport.pdf"));
+        new SimpleOutputStreamExporterOutput(destinationPath));
         
         SimplePdfReportConfiguration reportConfig
         = new SimplePdfReportConfiguration();
@@ -88,12 +93,13 @@ public class ReportManager {
 		}
                 
     }
-    public void exportToXls(JasperPrint print) {
+    public void exportToXls(JasperPrint print, String destinationDir) {
         JRXlsxExporter exporter = new JRXlsxExporter();
         
         exporter.setExporterInput(new SimpleExporterInput(print));
+        String destinationPath = buildDestinationPath(destinationDir, ".xls");
         exporter.setExporterOutput(
-        new SimpleOutputStreamExporterOutput("employeeReport.xls"));
+        new SimpleOutputStreamExporterOutput(destinationPath));
 
         SimpleXlsxReportConfiguration reportConfig
         = new SimpleXlsxReportConfiguration();
@@ -106,6 +112,14 @@ public class ReportManager {
 			ex.printStackTrace();
 		}
         
+    }
+    private String buildDestinationPath(String directory, String extension)
+    {
+        File dir = new File(directory);
+        // TODO: control possible permission exceptions
+        if (!dir.exists()) dir.mkdirs();
+        String fileName = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss").format(new Date());
+        return directory +"/" + fileName + extension;
     }
 
 }

@@ -14,7 +14,8 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public class Aggregator {
     ReportManager manager = new ReportManager();
-    
+    // TODO: dir should be configurable. Tried Injection did not work maybe save it in resources?
+    String reportsSaveDir = "/home/rpradom/personalspace/quarkus-jasper/generated-reports";
     public Aggregator() {
         super();
     }
@@ -22,12 +23,12 @@ public class Aggregator {
     public void buildPdfReport() {
         JasperReport report = manager.loadTemplate();
         JasperPrint print = manager.addEmployeeData(report);
-        manager.exportToPDF(print);
+        manager.exportToPDF(print, reportsSaveDir);
     }
     public void buildXlsReport() {
         JasperReport report = manager.loadTemplate();
         JasperPrint print = manager.addEmployeeData(report);
-        manager.exportToXls(print);
+        manager.exportToXls(print, reportsSaveDir);
     }
     public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> employees = new ArrayList<EmployeeDto>();

@@ -4,6 +4,7 @@ mvnw*
 .project
 .vscode
 .classpath
+generated-reports/
 ##
 
 # Created by https://www.gitignore.io/api/java,linux,maven,visualstudiocode
