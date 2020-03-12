@@ -1,18 +1,38 @@
 # quarkus-jasper
 
-Shows a basic API that creates a simple JasperReport and allows the user to retrieve the info as a file (Excel or PDF) and a REST response.
+Offers a basic API to create Jasper reports through a Quarkus microservice. The objective is to be able to ask for some information and receive it three different ways:
 
-## Database
+1. As a json rest response.
+2. As a jasper report in `.pdf` format attached to a rest response.
+3. As a jasper report in `.xls` format attached to a rest response.
 
-Download the [docker postgres image ![elephant](https://github.githubassets.com/images/icons/emoji/unicode/1f418.png)](https://hub.docker.com/_/postgres):
+## Development environment
 
-- `docker pull postgres`
+You need to have:
+
+1. All the Quarkus environment installed &rarr; There is an environment set up section in [the the following tutorial](https://quarkus.io/quarkus-workshops/super-heroes/)
+
+2. Any IDE compatible with Quarkus.
+
+3.  The database running &rarr; Follow the next section to run the database in a container. 
+
+4. To start the development server do:
+
+   ```bash
+   mvn quarkus:dev
+   ```
+
+###  Database ![elephant](https://github.githubassets.com/images/icons/emoji/unicode/1f418.png)
+
+Download the [docker postgres image ](https://hub.docker.com/_/postgres):
+
+- `docker pull postgres` 
 
 Run the docker image with specific username, password and database name:
 
 - `docker run --name employees-postgres -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=employees -d postgres`
 
-Right now the database is up with user `sarah`, password `connor` and a database called `people`. As we configured in our `application.properties`:
+Right now the database is up with user `admin`, password `admin` and a database called `employees`. As we configured in our `application.properties`:
 
 ```
 # configure your datasource
@@ -24,22 +44,33 @@ quarkus.datasource.password=admin
 quarkus.hibernate-orm.database.generation=drop-and-create
 ```
 
-But there is no table `person` in database `people`. That table is needed in order to persist our `Panache` entity `Person`. Even `Quarkus` will notify this, but thanks to the statement `quarkus.hibernate-orm.database.generation=drop-and-create` in `application.properties` all the `Panache` entities will be created as tables in database `people`.
+But there is no table `person` in database `employees`. That table is needed in order to persist our `Panache` entity `Person`. Even `Quarkus` will notify this, but thanks to the statement `quarkus.hibernate-orm.database.generation=drop-and-create` in `application.properties` all the `Panache` entities will be created as tables in database `employees`.
 
 In case you want to check the database run the [`psql`](https://www.postgresql.org/docs/9.2/app-psql.html) interactive terminal:
 
-- `docker exec -it person-postgres psql -U admin -d admin`
+- `docker exec -it employees-postgres psql -U admin -d employees`
 - `\dt` (show all tables)
 - `SELECT * FROM employees;` (show all rows)
-- Learn more from [here](https://www.postgresql.org/docs/) ![stuck_out_tongue_closed_eyes](https://github.githubassets.com/images/icons/emoji/unicode/1f61d.png)
-
-
+- Learn more [here](https://www.postgresql.org/docs/)
 
 ## Testing
 
-The following `curl` allows testing in this early development stage:
+At the moment, the microservice has three separated endpoints that can be tested with the following `curl`:
 
 ```bash
-curl http://127.0.0.1:8080/hello
+curl http://127.0.0.1:8080/employees
 ```
 
+There is no expected response yet.
+
+```bash
+curl http://127.0.0.1:8080/employees/report/xls
+```
+
+There is no expected response yet but the reports are being locally persisted
+
+``` bash
+curl http://127.0.0.1:8080/employees/report/pdf
+```
+
+There is no expected response yet but the reports are being locally persisted
