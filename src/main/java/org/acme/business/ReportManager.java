@@ -1,10 +1,13 @@
 package org.acme.business;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import com.lowagie.text.pdf.codec.Base64.OutputStream;
 
 import org.acme.entities.Employee;
 
@@ -18,6 +21,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRSaver;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
@@ -63,7 +67,9 @@ public class ReportManager {
 
         return jasperPrint;
     }
-    public void exportToPDF(JasperPrint print, String destinationDir) {
+    public ByteArrayOutputStream exportToPDF(JasperPrint print, String destinationDir) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(baos);
         JRPdfExporter exporter = new JRPdfExporter();
  
         exporter.setExporterInput(new SimpleExporterInput(print));
@@ -84,13 +90,15 @@ public class ReportManager {
         
         exporter.setConfiguration(reportConfig);
         exporter.setConfiguration(exportConfig);
+        exporter.setExporterOutput(exporterOutput);
         
         try {
-			exporter.exportReport();
+            exporter.exportReport();
 		} catch (JRException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
-		}
+        }
+        return baos;
                 
     }
     public void exportToXls(JasperPrint print, String destinationDir) {

@@ -1,5 +1,6 @@
 package org.acme.business;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,11 @@ public class Aggregator {
         super();
     }
     
-    public void buildPdfReport() {
+    public ByteArrayOutputStream buildPdfReport() {
         JasperReport report = manager.loadTemplate();
         JasperPrint print = manager.addEmployeeData(report);
-        manager.exportToPDF(print, reportsSaveDir);
+        ByteArrayOutputStream baos = manager.exportToPDF(print, reportsSaveDir);
+        return baos;
     }
     public void buildXlsReport() {
         JasperReport report = manager.loadTemplate();
