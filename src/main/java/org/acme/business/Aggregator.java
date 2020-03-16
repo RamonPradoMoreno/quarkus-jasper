@@ -27,10 +27,11 @@ public class Aggregator {
         ByteArrayOutputStream baos = manager.exportToPDF(print, reportsSaveDir);
         return baos;
     }
-    public void buildXlsReport() {
+    public ByteArrayOutputStream buildXlsReport() {
         JasperReport report = manager.loadTemplate();
         JasperPrint print = manager.addEmployeeData(report);
-        manager.exportToXls(print, reportsSaveDir);
+        ByteArrayOutputStream baos = manager.exportToXls(print, reportsSaveDir);
+        return baos;
     }
     public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> employees = new ArrayList<EmployeeDto>();

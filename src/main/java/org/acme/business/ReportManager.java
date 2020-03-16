@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.lowagie.text.pdf.codec.Base64.OutputStream;
-
 import org.acme.entities.Employee;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -21,7 +19,6 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRSaver;
-import net.sf.jasperreports.export.OutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
@@ -71,7 +68,7 @@ public class ReportManager {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(baos);
         JRPdfExporter exporter = new JRPdfExporter();
- 
+        // TOTHINK: setExporter is being called twice and not overwritting itself.
         exporter.setExporterInput(new SimpleExporterInput(print));
         String destinationPath = buildDestinationPath(destinationDir, ".pdf");
         exporter.setExporterOutput(
@@ -101,13 +98,17 @@ public class ReportManager {
         return baos;
                 
     }
-    public void exportToXls(JasperPrint print, String destinationDir) {
+    public ByteArrayOutputStream exportToXls(JasperPrint print, String destinationDir) {
         JRXlsxExporter exporter = new JRXlsxExporter();
-        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(baos);
+
         exporter.setExporterInput(new SimpleExporterInput(print));
         String destinationPath = buildDestinationPath(destinationDir, ".xls");
         exporter.setExporterOutput(
         new SimpleOutputStreamExporterOutput(destinationPath));
+        
+        exporter.setExporterOutput(exporterOutput);
 
         SimpleXlsxReportConfiguration reportConfig
         = new SimpleXlsxReportConfiguration();
@@ -118,7 +119,8 @@ public class ReportManager {
 		} catch (JRException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
-		}
+        }
+        return baos;
         
     }
     private String buildDestinationPath(String directory, String extension)
