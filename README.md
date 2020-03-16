@@ -6,17 +6,29 @@ Offers a basic API to create Jasper reports through a Quarkus microservice. The 
 2. As a jasper report in `.pdf` format attached to a rest response.
 3. As a jasper report in `.xls` format attached to a rest response.
 
-## Development environment
+## Basics
 
-You need to have:
+If after cloning the repo you see errors in the IDE. You must:
+
+1. Execute `mvn package` for downloading dependencies.
+2. In VsCode: Right click the `pom.xml` and click *Update project configuration*.
+3. In Eclipse: `alt + F5` and update all packages.
+
+## First steps
+
+Building a development :
 
 1. All the Quarkus environment installed &rarr; There is an environment set up section in [the the following tutorial](https://quarkus.io/quarkus-workshops/super-heroes/)
 
-2. Any IDE compatible with Quarkus.
+2. Any IDE compatible with Quarkus. I currently use VsCode with the qu
 
 3.  The database running &rarr; Follow the next section to run the database in a container. 
 
-4. To customize the report destination dir &rarr; Use a valid dir where you have permissions in the  `reportsSaveDir` variable of the `Aggregator` class.
+4. To customize the report destination dir &rarr; Use a valid dir where you have permissions in the  `reportsSaveDir` variable of the `Aggregator` class. For example:
+
+   ```bash
+   /home/rpradom/personalspace/quarkus-jasper/generated-reports
+   ```
 
 5. To start the development server do:
 
@@ -24,7 +36,7 @@ You need to have:
    mvn quarkus:dev
    ```
 
-###  Database ![elephant](https://github.githubassets.com/images/icons/emoji/unicode/1f418.png)
+##  Database ![elephant](https://github.githubassets.com/images/icons/emoji/unicode/1f418.png)
 
 Download the [docker postgres image ](https://hub.docker.com/_/postgres):
 
@@ -55,6 +67,12 @@ In case you want to check the database run the [`psql`](https://www.postgresql.o
 - `SELECT * FROM employees;` (show all rows)
 - Learn more [here](https://www.postgresql.org/docs/)
 
+## Known Problems
+
+1. Native image generation does not work due to Jasper Reports having hidden execution dependencies.
+2. The `generated-reports` directory should be specified in the `applications.properties` or `/resources` instead of in a java class.
+4. More tests and Javadocs are requiered.
+
 ## Testing
 
 At the moment, the microservice has three separated endpoints that can be tested with the following `curl`:
@@ -63,16 +81,16 @@ At the moment, the microservice has three separated endpoints that can be tested
 curl http://127.0.0.1:8080/employees
 ```
 
-There is no expected response yet.
+JSON Response with the employees persisted in the database.
 
 ```bash
 curl http://127.0.0.1:8080/employees/report/xls
 ```
 
-There is no expected response yet but the reports are being locally persisted
+Reports are being locally persisted and can be downloaded if the link is accessed through a web browser.
 
 ``` bash
 curl http://127.0.0.1:8080/employees/report/pdf
 ```
 
-There is no expected response yet but the reports are being locally persisted
+Reports are being locally persisted and can be downloaded if the link is accessed through a web browser.

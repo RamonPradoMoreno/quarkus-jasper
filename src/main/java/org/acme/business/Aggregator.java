@@ -33,7 +33,7 @@ public class Aggregator {
         ByteArrayOutputStream baos = manager.exportToXls(print, reportsSaveDir);
         return baos;
     }
-    public List<EmployeeDto> getAllEmployees() {
+    public List<EmployeeDto> getAllEmployeeDtos() {
         List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
         List<Employee> allEmployeeEntities = Employee.findAll().list();
         for (Employee employee : allEmployeeEntities){

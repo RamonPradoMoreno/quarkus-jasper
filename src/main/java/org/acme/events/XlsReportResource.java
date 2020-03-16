@@ -19,7 +19,10 @@ public class XlsReportResource {
         Aggregator aggregator = new Aggregator();
         ByteArrayOutputStream baos = aggregator.buildXlsReport();
         byte[] bytes = baos.toByteArray();
+        if(baos.size() != 0 && baos != null){
+            return Response.ok(bytes).type("application/xls").header("Content-Disposition",  "filename=sample_report.xls").build();
+        }
+        return Response.serverError().entity("Report is empty, maybe the database is empty.").build();
         
-        return Response.ok(bytes).type("application/xls").header("Content-Disposition",  "filename=sample_report.xls").build();
     }
 }

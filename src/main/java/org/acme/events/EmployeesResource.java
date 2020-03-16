@@ -20,10 +20,9 @@ public class EmployeesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEmployees() {
         Aggregator aggregator = new Aggregator();
-        List<EmployeeDto> employees = aggregator.getAllEmployees();
-        //TODO: fix this check makes no sense.
+        List<EmployeeDto> employees = aggregator.getAllEmployeeDtos();
         if (employees != null)
             return Response.ok(employees).build();            
-        return Response.noContent().build();
+        return Response.serverError().entity("No employees found").build();
     }
 }

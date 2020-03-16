@@ -4,9 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.acme.dto.EmployeeDto;
 import org.acme.entities.Employee;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -52,14 +54,14 @@ public class ReportManager {
         return this.report;
     }
     public JasperPrint addEmployeeData(JasperReport report) {
+        // We dont use a dto because we want to extract data from tables (entities)
         List<Employee> allEmployees = Employee.findAll().list();
         JRDataSource conn = new JRBeanCollectionDataSource(allEmployees);
         JasperPrint jasperPrint = null;
         try {
 			jasperPrint = JasperFillManager.fillReport(report, null,conn);
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (JRException ex) {
+			ex.printStackTrace();
         }
 
         return jasperPrint;
@@ -92,7 +94,6 @@ public class ReportManager {
         try {
             exporter.exportReport();
 		} catch (JRException ex) {
-			// TODO Auto-generated catch block
 			ex.printStackTrace();
         }
         return baos;
@@ -117,7 +118,6 @@ public class ReportManager {
         try {
 			exporter.exportReport();
 		} catch (JRException ex) {
-			// TODO Auto-generated catch block
 			ex.printStackTrace();
         }
         return baos;

@@ -21,6 +21,10 @@ public class PdfReportResource {
         Aggregator aggregator = new Aggregator();
         ByteArrayOutputStream baos = aggregator.buildPdfReport();
         byte[] bytes = baos.toByteArray();
-        return Response.ok(bytes).type("application/pdf").header("Content-Disposition",  "filename=sample_report.pdf").build();
+        if(baos.size() != 0 && baos != null){
+            return Response.ok(bytes).type("application/pdf").header("Content-Disposition",  "filename=sample_report.pdf").build();
+    
+        }
+        return Response.serverError().entity("Report is empty, maybe the database is empty.").build();
     }
 }
